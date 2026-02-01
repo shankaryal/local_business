@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-
-const API_URL = 'http://localhost:5000/api'
+import businessAPI from '../services/businessAPI'
 
 export default function AddBusiness() {
   const navigate = useNavigate()
@@ -28,7 +26,7 @@ export default function AddBusiness() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${API_URL}/businesses/meta/categories`)
+      const response = await businessAPI.getCategories()
       setCategories(response.data.data.filter((c) => c !== 'All'))
     } catch (err) {
       console.error('Error fetching categories:', err)
@@ -49,7 +47,7 @@ export default function AddBusiness() {
     setError(null)
 
     try {
-      await axios.post(`${API_URL}/businesses`, formData)
+      await businessAPI.createBusiness(formData)
       alert('Business added successfully!')
       navigate('/')
     } catch (err) {

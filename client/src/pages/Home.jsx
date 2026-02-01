@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import SearchBar from '../components/SearchBar'
 import BusinessList from '../components/BusinessList'
-
-const API_URL = 'http://localhost:5000/api'
+import businessAPI from '../services/businessAPI'
 
 export default function Home() {
   const [businesses, setBusinesses] = useState([])
@@ -23,7 +21,7 @@ export default function Home() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${API_URL}/businesses/meta/categories`)
+      const response = await businessAPI.getCategories()
       setCategories(response.data.data)
     } catch (err) {
       console.error('Error fetching categories:', err)
@@ -34,17 +32,7 @@ export default function Home() {
     setLoading(true)
     setError(null)
     try {
-      const params = {
-        page,
-        limit: 9,
-      }
-
-      if (search) params.search = search
-      if (category !== 'All') params.category = category
-      if (city) params.city = city
-
-      const response = await axios.get(`${API_URL}/businesses`, { params })
-
+      const response = await businessAPI.searchBusinesses(search, category, city, page, 9)
       setBusinesses(response.data.data)
       setTotalPages(response.data.pages)
     } catch (err) {

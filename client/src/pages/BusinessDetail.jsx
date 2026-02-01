@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import axios from 'axios'
-
-const API_URL = 'http://localhost:5000/api'
+import businessAPI from '../services/businessAPI'
 
 export default function BusinessDetail() {
   const { id } = useParams()
@@ -17,7 +15,7 @@ export default function BusinessDetail() {
 
   const fetchBusiness = async () => {
     try {
-      const response = await axios.get(`${API_URL}/businesses/${id}`)
+      const response = await businessAPI.getBusinessById(id)
       setBusiness(response.data.data)
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load business details')
